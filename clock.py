@@ -41,13 +41,6 @@ try:
 			clock('[ %d . %m . %Y ]  ', 1, 0, rainbow[WTF])
 			clock('%H : %M : %S' , 1, 0, rainbow[WTF])
 			sleep(0.2)
-		elif output == 'shrek' or output == 's':
-			for green_num in range(0, 11):
-				print(clear)
-				clock('[ %a . %b ] ', 1, 0, green[green_num+2])
-				clock('[ %d . %m . %Y ] ', 1, 0,  green[green_num+1])
-				clock('%H : %M : %S     ', 1, 0, green[green_num+0])
-				sleep(0.1)
 		else:
 			output = 'white'
 except KeyboardInterrupt:
