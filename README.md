@@ -1,5 +1,5 @@
 # cool_clock
-Requires: Python 3.x, Figlet
+Requires: Python 3, Figlet, https://github.com/YarnikeyZ/seg10py
 
 ## Big white clock (w):
 ![clock_white](https://user-images.githubusercontent.com/83335375/170808779-ff565667-37ee-4888-b942-8442c39b8e69.gif)
@@ -15,3 +15,6 @@ Requires: Python 3.x, Figlet
 
 ## Thin, wide, intresting clock (p):
 ![clock_progress](https://user-images.githubusercontent.com/83335375/170808805-df3d9145-2161-4b83-83ec-a91f3ee6a6b2.gif)
+
+## Big clock maded out of 4 segmented (7 (10) segments) indicators (s):
+![clock_segmented](https://user-images.githubusercontent.com/83335375/190922848-b07cebb6-4241-49c8-8db8-e6318bebfda2.gif)
