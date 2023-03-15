@@ -1,91 +1,148 @@
-##Requirments: Python3, Figlet
 from time import sleep, strftime, localtime;
-from subprocess import getoutput as gout
-from random import randint as rd
-from seg10py import dnum, dseg
+from subprocess import getoutput
+from random import randint
+from os import get_terminal_size as gts
+from sys import argv
+from math import cos, pi, sin
 
-clr = "\033[0;0m\033[H\033[2J\033[3J"
+from pypixpile.pixpile import *
+from seg10py.seg10py import dnum, dseg
 
-def color(text, t_color, b_color):
-    return f'\033[38;5;{t_color}m\033[48;5;{b_color}m{text}\033[0;0m'
+CLR = "\033[0;0m\033[H\033[2J\033[3J"
+RAINBOW = [196, 208, 226, 82, 39, 21, 93, 196, 208]
+TIMETYPES = ['%H', '%M', '%S', '%d', '%m', '%a', '%b', '%Y']
 
-def big(text):
-    return f'{gout(f"figlet {text}")[1:]}\n'
+def colorIt(text, colorCodeText, colorCodeBackground):
+    return f'\033[38;5;{colorCodeText}m\033[48;5;{colorCodeBackground}m{text}\033[0;0m'
 
-def get_time(str_time):
+def bigIt(text):
+    return f'{getoutput(f"figlet {text}")[1:]}\n'
+
+def getTime(str_time):
     return strftime(str_time, localtime())
 
-try:
-    type_of = input('Type of clock (w/r/wtf/c/p/s):').lower()
-    rainbow = [196, 208, 226, 82, 39, 21, 93, 196, 208]
-    types_times = ['%H', '%M', '%S', '%d', '%m', '%a', '%b', '%Y']
-    while True:
-        times = []
-        for tim in types_times:
-            times.append(get_time(tim))
-        if type_of == 'white' or type_of == 'w':
-            print(clr,
-            big(f'[ {times[5]} . {times[6]} ]'),
-            big(f'[ {times[3]} . {times[4]} . {times[7]} ]'),
-            big(f'{times[0]} : {times[1]} : {times[2]}'))
-            sleep(1)
-        elif type_of == 'rainbow' or type_of == 'r':
-            for rainbow_num in range(0, 7):
-                print(clr,
-                color(big(f'[ {times[5]} . {times[6]} ]'), rainbow[rainbow_num+2], 0),
-                color(big(f'[ {times[3]} . {times[4]} . {times[7]} ]'), rainbow[rainbow_num+1], 0),
-                color(big(f'{times[0]} : {times[1]} : {times[2]}'), rainbow[rainbow_num+0], 0))
-                sleep(0.1)
-        elif type_of == 'wtf':
-            WTF = rd(0,7)
-            print(clr,
-            color(big(f'[ {times[5]} . {times[6]} ]'), 0, rainbow[WTF]),
-            color(big(f'[ {times[3]} . {times[4]} . {times[7]} ]'), 0, rainbow[WTF]),
-            color(big(f'{times[0]} : {times[1]} : {times[2]}'), 0, rainbow[WTF]))
-            sleep(0.2)
-        elif type_of == 'compact' or type_of == 'c':
-            print(f"""{clr}\n\n\n\n\n
-                  Time: {times[0]}:{times[1]}:{times[2]}
-                  Date: {times[3]}.{times[4]}.{times[7]}
-                  Uptime: {gout('uptime').replace(' days,', 'd')[12:][:-42]}\n\n\n\n\n""")
-            sleep(1)
-        elif type_of == 'progress' or type_of == 'p':
-            print(f"""{clr}\n\n\n\n\n\n\n\n\n
-[Hour] [{times[0]}] [{color(''.ljust(int(times[0]), '#'), 9, 0)}{color(''.ljust(24-int(times[0]), '-'), 52, 0)}]
-[Min ] [{times[1]}] [{color(''.ljust(int(times[1]), '#'), 154, 0)}{color(''.ljust(60-int(times[1]), '-'), 100, 0)}]
-[Sec ] [{times[2]}] [{color(''.ljust(int(times[2]), '#'), 10, 0)}{color(''.ljust(60-int(times[2]), '-'), 34, 0)}]""")
-            sleep(1)
-        elif type_of == 'segmented' or type_of == 's':
-            print(clr, end="")
-            x, y = 16, 5
-            hdiv, hmod, mdiv, mmod = 0, 0, 0, 0
+def clockBigWhite(strTimes):
+    print(CLR,
+        bigIt(f'[ {strTimes[5]} . {strTimes[6]} ]'),
+        bigIt(f'[ {strTimes[3]} . {strTimes[4]} . {strTimes[7]} ]'),
+        bigIt(f'{strTimes[0]} : {strTimes[1]} : {strTimes[2]}')
+    )
+    sleep(1)
 
-            if int(times[0]) > 0:
-                hdiv = int(times[0]) // 10
-                hmod = int(times[0]) %  10
-            if int(times[1]) > 0:
-                mdiv = int(times[1]) // 10
-                mmod = int(times[1]) %  10
-            
-            print(dnum(hdiv, ".", x+1, y-1))
-            print(dnum(hdiv, ".", x+2, y-2))
-            print(dnum(hdiv, "3", x, y))
-            x += 28
-            print(dnum(hmod, ".", x+1, y-1))
-            print(dnum(hmod, ".", x+2, y-2))
-            print(dnum(hmod, "3", x, y))
-            print(dseg(9,    "*", x, y))
-            x += 28
-            print(dnum(mdiv, ".", x+1, y-1))
-            print(dnum(mdiv, ".", x+2, y-2))
-            print(dnum(mdiv, "3", x, y))
-            x += 28
-            print(dnum(mmod, ".", x+1, y-1))
-            print(dnum(mmod, ".", x+2, y-2))
-            print(dnum(mmod, "3", x, y))
-            sleep(1)
-        else:
-            exit()
-except KeyboardInterrupt:
-        print(clr)
+def clockBigRainbow(strTimes):
+    for rainbow_num in range(7):
+        print(CLR,
+            colorIt(bigIt(f'[ {strTimes[5]} . {strTimes[6]} ]'), RAINBOW[rainbow_num+2], 0),
+            colorIt(bigIt(f'[ {strTimes[3]} . {strTimes[4]} . {strTimes[7]} ]'), RAINBOW[rainbow_num+1], 0),
+            colorIt(bigIt(f'{strTimes[0]} : {strTimes[1]} : {strTimes[2]}'), RAINBOW[rainbow_num+0], 0)
+        )
+        sleep(0.1)
+
+def clockBigWtf(strTimes):
+    wtf = randint(0,7)
+    print(CLR,
+        colorIt(bigIt(f'[ {strTimes[5]} . {strTimes[6]} ]'), 0, RAINBOW[wtf]),
+        colorIt(bigIt(f'[ {strTimes[3]} . {strTimes[4]} . {strTimes[7]} ]'), 0, RAINBOW[wtf]),
+        colorIt(bigIt(f'{strTimes[0]} : {strTimes[1]} : {strTimes[2]}'), 0, RAINBOW[wtf])
+    )
+    sleep(0.2)
+
+def clockSmall(strTimes):
+    print(f"""{CLR}\n\n\n\n\n
+        Time: {strTimes[0]}:{strTimes[1]}:{strTimes[2]}
+        Date: {strTimes[3]}.{strTimes[4]}.{strTimes[7]}
+        Uptime: {getoutput('uptime').replace(' days,', 'd')[12:][:-42]}\n\n\n\n\n"""
+    )
+    sleep(1)
+
+def clockProgressBar(strTimes, intTimes):
+    print(f"""{CLR}\n\n\n\n\n\n\n\n\n
+        [Hour] [{strTimes[0]}] [{colorIt(''.ljust(intTimes[0], '#'), 9, 0)}{colorIt(''.ljust(24-intTimes[0], '-'), 52, 0)}]
+        [Min ] [{strTimes[1]}] [{colorIt(''.ljust(intTimes[1], '#'), 154, 0)}{colorIt(''.ljust(60-intTimes[1], '-'), 100, 0)}]
+        [Sec ] [{strTimes[2]}] [{colorIt(''.ljust(intTimes[2], '#'), 10, 0)}{colorIt(''.ljust(60-intTimes[2], '-'), 34, 0)}]"""
+    )
+    sleep(1)
+
+def clockSegmented(intTimes):
+    print(CLR, end="")
+    x, y = 16, 5
+    hdiv, hmod, mdiv, mmod = 0, 0, 0, 0
+
+    if intTimes[0] > 0:
+        hdiv = intTimes[0] // 10
+        hmod = intTimes[0] %  10
+    if intTimes[1] > 0:
+        mdiv = intTimes[1] // 10
+        mmod = intTimes[1] %  10
+    
+    print(dnum(hdiv, ".", x+1, y-1))
+    print(dnum(hdiv, ".", x+2, y-2))
+    print(dnum(hdiv, "3", x, y))
+    x += 28
+    print(dnum(hmod, ".", x+1, y-1))
+    print(dnum(hmod, ".", x+2, y-2))
+    print(dnum(hmod, "3", x, y))
+    print(dseg(9,    "*", x, y))
+    x += 28
+    print(dnum(mdiv, ".", x+1, y-1))
+    print(dnum(mdiv, ".", x+2, y-2))
+    print(dnum(mdiv, "3", x, y))
+    x += 28
+    print(dnum(mmod, ".", x+1, y-1))
+    print(dnum(mmod, ".", x+2, y-2))
+    print(dnum(mmod, "3", x, y))
+    sleep(1)
+
+def clockDial(intTimes):
+    print(CLR, end="")
+    canvas = list(gts())
+    canvas[1] -= 5
+    center = [canvas[0]//2, canvas[1]//2]
+    rady = center[1]
+    draw_ellipse("#", 15, center[0], center[1], rady*2, rady)
+    n=270
+    draw_line("h", 10, center[0], center[1], round(center[0]+(rady*2)*cos((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)), round(center[1]+rady*sin((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)))
+    draw_line("m", 11, center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)))
+    draw_line("s", 9 , center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[2]                  )*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[2]                  )*pi/180)))
+    sleep(1)
+
+def main():
+    try:
+        try:
+            clockType = argv[1]
+        except IndexError:
+            clockType = input('Type of clock (w/r/wtf/c/p/s/d):').lower()
+        
+        while True:
+            strTimes = []
+            intTimes = []
+            for time in TIMETYPES:
+                time = getTime(time)
+                strTimes.append(time)
+                try:
+                    intTimes.append(int(time))
+                except ValueError:
+                    pass
+            match clockType:
+                case 'w'|'white':
+                    clockBigWhite(strTimes)
+                case 'r'|'rainbow':
+                    clockBigRainbow(strTimes)
+                case 'wtf':
+                    clockBigWtf(strTimes)
+                case 'c'|'compact':
+                    clockSmall(strTimes)
+                case 'p'|'progress':
+                    clockProgressBar(strTimes, intTimes)
+                case 's'|'segmented':
+                    clockSegmented(intTimes)
+                case 'd'|'dial':
+                    clockDial(intTimes)
+                case _:
+                    exit()
+    except KeyboardInterrupt:
+        print(CLR, end="")
         exit()
+
+if __name__ == '__main__':
+    main()
