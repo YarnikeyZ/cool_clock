@@ -8,12 +8,8 @@ from math import cos, pi, sin
 from pypixpile.pixpile import *
 from seg10py.seg10py import dnum, dseg
 
-CLR = "\033[0;0m\033[H\033[2J\033[3J"
 RAINBOW = [196, 208, 226, 82, 39, 21, 93, 196, 208]
 TIMETYPES = ['%H', '%M', '%S', '%d', '%m', '%a', '%b', '%Y']
-
-def colorIt(text, colorCodeText, colorCodeBackground):
-    return f'\033[38;5;{colorCodeText}m\033[48;5;{colorCodeBackground}m{text}\033[0;0m'
 
 def bigIt(text):
     return f'{getoutput(f"figlet {text}")[1:]}\n'
@@ -99,11 +95,11 @@ def clockDial(intTimes):
     canvas[1] -= 5
     center = [canvas[0]//2, canvas[1]//2]
     rady = center[1]
-    draw_ellipse("#", 15, center[0], center[1], rady*2, rady)
+    drawEllipse("#", 15, 0, center[0], center[1], rady*2, rady)
     n=270
-    draw_line("h", 10, center[0], center[1], round(center[0]+(rady*2)*cos((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)), round(center[1]+rady*sin((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)))
-    draw_line("m", 11, center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)))
-    draw_line("s", 9 , center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[2]                  )*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[2]                  )*pi/180)))
+    drawLine("h", 10, 0, center[0], center[1], round(center[0]+(rady*2)*cos((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)), round(center[1]+rady*sin((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)))
+    drawLine("m", 11, 0, center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)))
+    drawLine("s", 9 , 0, center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[2]                  )*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[2]                  )*pi/180)))
     sleep(1)
 
 def main():
