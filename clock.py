@@ -5,7 +5,7 @@ from os import get_terminal_size as gts
 from sys import argv
 from math import cos, pi, sin
 
-from pypixpile.pixpile import *
+from pypixpile.pypixpile import *
 from seg10py.seg10py import dnum, dseg
 
 RAINBOW = [196, 208, 226, 82, 39, 21, 93, 196, 208]
@@ -95,7 +95,7 @@ def clockDial(intTimes):
     canvas[1] -= 5
     center = [canvas[0]//2, canvas[1]//2]
     rady = center[1]
-    drawEllipse("#", 15, 0, center[0], center[1], rady*2, rady)
+    drawEllipse("#", 15, 0, center[0], center[1], rady*2, rady, False)
     n=270
     drawLine("h", 10, 0, center[0], center[1], round(center[0]+(rady*2)*cos((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)), round(center[1]+rady*sin((n+30*intTimes[0] + 0.5*intTimes[1])*pi/180)))
     drawLine("m", 11, 0, center[0], center[1], round(center[0]+(rady*2)*cos((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)), round(center[1]+rady*sin((n+6 *intTimes[1] + 0.1*intTimes[2])*pi/180)))
